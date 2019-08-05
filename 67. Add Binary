@@ -1,0 +1,49 @@
+class Solution {
+public:
+    string addBinary(string a, string b) {
+        string longString = "0";
+        string shortString = "0";
+        string output;
+        string carry = "0";
+        
+        int numCarry = 0;
+        int numShort = 0;
+        int numLong = 0;
+        int sum = 0;
+        
+        if (a.length() > b.length()) {
+          longString = a;
+          shortString = b;
+        }
+        else {
+          longString = b;
+          shortString = a;
+        }
+        
+        int insertNum = longString.length() - shortString.length();
+        for (int i = 0; i < insertNum ; i ++) {
+            shortString.insert(0, "0");
+        }
+        
+        for (int i = longString.length() - 1; i >= 0  ; i --) {
+            numCarry = carry[0] - '0';
+            numShort = shortString[i] - '0';
+            numLong = longString[i] - '0';
+            sum = numCarry + numShort + numLong;
+            
+            if (sum >= 2) {
+                carry = "1";
+            }
+            else {
+                carry = "0";
+            }
+            
+            output.insert(0, to_string((sum % 2)));
+        }
+        
+        if (carry != "0") {
+            output.insert(0, carry);
+        }
+        return  output;
+    }
+};

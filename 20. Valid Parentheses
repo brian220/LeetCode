@@ -1,0 +1,46 @@
+class Solution {
+public:
+    bool isValid(string s) {
+        vector <char> pStack;
+        if (s.length() == 0) {
+            return true;
+        }
+        
+        if (s.length() % 2 == 1) {
+            return false;
+        }
+        
+        for (int i = 0; i < s.length(); i ++) {
+            if ((s[i] == ')' || s[i] == '}' || s[i] == ']') && i != 0) {   
+                if (isPair(pStack.back(), s[i])) {
+                    pStack.pop_back();
+                }
+                else {
+                    return false;
+                }
+            }
+            else {
+                pStack.push_back(s[i]);
+            }
+        }
+       
+        return pStack.size() == 0;
+    }
+    
+    bool isPair(char left , char right) {
+        bool pair = false;
+        if (left == '(' && right == ')') {
+            pair = true;
+        }
+        else if (left == '{' && right == '}') {
+            pair = true;
+        }
+        else if (left == '[' && right == ']') {
+            pair = true;
+        }
+        else {
+            pair = false;
+        }
+        return pair;
+    }
+};

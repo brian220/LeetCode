@@ -1,0 +1,22 @@
+class Solution {
+public:
+    bool isOneBitCharacter(vector<int>& bits) {
+        int bitNum = 0;
+        bool isOneBit = false;
+        while (bitNum < bits.size()) {
+            
+          if(bitNum == bits.size() - 1) {
+                  isOneBit = true;
+          }
+            
+          if (bits[bitNum] == 1) {
+              bitNum += 2;
+          }
+          else {
+              bitNum += 1;    
+          }
+        }
+        
+        return isOneBit;
+    }
+};

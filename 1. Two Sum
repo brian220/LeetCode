@@ -1,0 +1,53 @@
+class Solution {
+public:
+    
+    vector<int> twoSum(vector<int>& nums, int target) {
+        int numBorder = 0;
+        int startNum = 0;
+        int leftNum = 0;
+        int rightNum = 0;
+        int left = 0;
+        int right = 0;
+        bool isFound = false;
+        bool leftIsFound = false;
+        vector <int> indices;
+        vector <int> tmpNums;
+        
+        for (int i = 0; i < nums.size(); i++) {
+            tmpNums.push_back(nums[i]);
+        }
+        
+        sort(tmpNums.begin(), tmpNums.end());  
+        numBorder = tmpNums.size();
+        
+        for ( startNum = 0 ; startNum < numBorder - 1 ; startNum ++) {
+            for (int i = startNum + 1; i < numBorder ; i ++) {
+               if (tmpNums[startNum] + tmpNums[i] == target) {
+                   leftNum = tmpNums[startNum];
+                   rightNum = tmpNums[i];
+                   isFound = true;
+               }
+               if (tmpNums[startNum] + tmpNums[i] > target) {
+                   numBorder = i;
+               }
+            }
+            if (isFound == true) {
+                break;
+            }
+        }
+
+        for (int i = 0 ; i < nums.size() ; i++) {
+            if ((nums[i] == leftNum || nums[i] == rightNum) && leftIsFound == false) {
+                left = i;
+                leftIsFound = true;
+            }
+            else if ((nums[i] == leftNum || nums[i] == rightNum) && leftIsFound == true) {
+                right = i;
+            }
+        }
+        
+        indices.push_back(left);
+        indices.push_back(right);
+        return indices; 
+    }
+};

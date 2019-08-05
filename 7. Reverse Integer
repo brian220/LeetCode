@@ -1,0 +1,35 @@
+class Solution {
+public:
+    int reverse(int x) {
+        long reverse = 0;
+        int isNegative = false;
+        bool overflow = false;
+     
+        if (x < 0) {
+            isNegative = true;
+        }
+        string xString = to_string(x);
+        
+        if(xString[xString.length() - 1] == '0') {
+            xString.erase(xString.begin() + (xString.length() - 1));
+        }
+        string reverseString = xString;
+        int startLength = xString.length() - 1;
+        for(int i = 0; i < xString.length(); i ++) {
+            reverseString[i] = xString[startLength];
+            startLength --;
+        }
+    
+        if (isNegative) {
+            reverseString.insert(0, "-");
+        }
+        
+        reverse = atol(reverseString.c_str());
+        if (reverse > INT32_MAX || reverse < -1 * INT32_MAX) {
+            reverse = 0;
+        } 
+        return reverse;
+        }
+         
+         
+};

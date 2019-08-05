@@ -1,0 +1,23 @@
+class Solution {
+public:
+    bool isPalindrome(int x) {
+        bool isPal = false;
+        long rev = 0;
+        long tmpX = x;
+        
+        if (x < 0) {
+            isPal = false;
+        }
+        else {
+          while(tmpX != 0) {
+              rev = rev * 10;
+              rev = rev + (tmpX % 10);
+              tmpX = tmpX / 10;
+          }
+          if (rev == x) {
+              isPal = true;
+          }
+        }
+        return isPal;
+    }
+};

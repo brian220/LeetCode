@@ -1,0 +1,46 @@
+// Stack Problem Use diferent brackets level to decode. stringStack[0] store level 0 , stringStack[1] store level 1 ...
+class Solution {
+public:
+    string decodeString(string s) {
+        vector <int> numStack;
+        vector <string> stringStack;
+        stringStack.resize(s.length());
+        bool isNumber = false;
+        int currentNumber = 0;
+        int currentLevel = 0;
+        if (s.length() == 0) {
+            return "";
+        }
+        for(int i = 0; i < s.length(); i ++) {
+            if (s[i] >= '0' && s[i] <= 9 && isNumber == false) {
+                isNumber = true;
+                currentNumber = s[i] - '0';
+            }
+            else if (s[i] >= '0' && s[i] <= '9') {
+                currentNumber *= 10;
+                currentNumber += s[i] - '0';
+            }
+            else if (s[i] == '[') {
+                isNumber = false;
+                numStack.push_back(currentNumber);
+                currentNumber = 0;
+                currentLevel ++;
+            }
+            else if (s[i] == ']') {
+                //Level decend
+                string tmpString = "";
+                for(int i = 0; i < numStack.back(); i++) {
+                    tmpString += stringStack[currentLevel];
+                }
+                stringStack[currentLevel] = "";
+                numStack.pop_back();
+                stringStack[currentLevel - 1] += tmpString;
+                currentLevel --;
+            }
+            else {
+                stringStack[currentLevel] += s[i];
+            }
+        }
+        return stringStack[0];
+    } 
+};

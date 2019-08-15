@@ -1,0 +1,33 @@
+class Solution {
+public:
+    int trap(vector<int>& height) {
+        vector <int> waterHeight;
+        int leftMaxHeight = 0;
+        if (height.size() == 0)
+            return 0;
+        
+        for (int i = 0; i < height.size() ; i ++) {
+            waterHeight.push_back(leftMaxHeight);
+            if (height[i] > leftMaxHeight) {
+                leftMaxHeight = height[i];
+            }
+        }
+        
+        int water = 0;
+        int rightMaxHeight = 0;
+        for (int i = height.size() - 1; i > 0; i --) {
+            if (rightMaxHeight < waterHeight[i]) {
+                 waterHeight[i] = rightMaxHeight;
+            }
+            
+            if (waterHeight[i] > height[i]) {
+                water += waterHeight[i] - height[i]; 
+            }
+            
+            if (height[i] > rightMaxHeight) {
+                rightMaxHeight = height[i];   
+            }
+        } 
+        return water;
+    }
+};

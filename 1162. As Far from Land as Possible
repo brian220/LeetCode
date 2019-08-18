@@ -1,0 +1,70 @@
+// https://leetcode.com/problems/as-far-from-land-as-possible/
+class Position {
+  public:
+      int posI;
+      int posJ;
+};
+
+class Solution {
+public:
+    int maxDistance(vector<vector<int>>& grid) {
+        vector<vector<bool>> visited;
+        visited.resize(grid.size(), vector<bool>(grid.size(), false));
+        vector<Position> currentPos;
+        for(int i = 0 ; i < grid.size(); i ++) {
+            for(int j = 0; j < grid[0].size(); j ++) {
+                if (grid[i][j] == 1) {
+                    visited[i][j] = true;
+                    Position pos;
+                    pos.posI = i;
+                    pos.posJ = j;
+                    currentPos.push_back(pos);
+                }
+            }
+        }
+        
+        int level = -1;
+        while(currentPos.size() != 0) {
+            vector<Position> newPos;
+            for(int i = 0; i < currentPos.size(); i ++) {
+                int currentI = currentPos[i].posI;
+                int currentJ = currentPos[i].posJ;
+                if(currentI - 1 >= 0 && visited[currentI - 1][currentJ] == false) {
+                    Position pos;
+                    pos.posI = currentI - 1;
+                    pos.posJ = currentJ;
+                    newPos.push_back(pos);
+                    visited[pos.posI][pos.posJ] = true;
+                } 
+                if(currentI + 1 < grid.size() && visited[currentI + 1][currentJ] == false) {
+                    Position pos;
+                    pos.posI = currentI + 1;
+                    pos.posJ = currentJ;
+                    newPos.push_back(pos);
+                    visited[pos.posI][pos.posJ] = true;
+                } 
+                if(currentJ - 1 >= 0 && visited[currentI][currentJ - 1] == false) {
+                    Position pos;
+                    pos.posI = currentI;
+                    pos.posJ = currentJ - 1;
+                    newPos.push_back(pos);
+                    visited[pos.posI][pos.posJ] = true;
+                } 
+                
+                if(currentJ + 1 < grid.size() && visited[currentI][currentJ + 1] == false) {
+                    Position pos;
+                    pos.posI = currentI;
+                    pos.posJ = currentJ + 1;
+                    newPos.push_back(pos);
+                    visited[pos.posI][pos.posJ] = true;
+                } 
+            }
+            currentPos = newPos;
+            level ++;
+       }
+       if (level <= 0) {
+           level = -1;
+       }
+       return level;
+    }
+};

@@ -1,0 +1,50 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+ //https://leetcode.com/problems/maximum-level-sum-of-a-binary-tree/
+class Solution {
+public:
+    int maxLevelSum(TreeNode* root) {
+        if (root == NULL) {
+            return 0; 
+        }
+        int level = 1;
+        int maxLevel = 1;
+        int maxSum = root -> val;
+        TreeNode* currentNode = root;
+        vector <TreeNode*> countMax;
+        countMax.push_back(root);
+     
+        while (countMax.size() != 0) {
+            level ++;
+            vector <TreeNode*> newCountMax;
+            int newMaxSum = 0;
+            for(int i = 0; i < countMax.size(); i ++) {
+                if (countMax[i] -> left != NULL) {
+                   newMaxSum += countMax[i] -> left -> val;
+                   newCountMax.push_back(countMax[i] -> left);
+                }
+                if (countMax[i] -> right != NULL) {
+                   newMaxSum += countMax[i] -> right -> val; 
+                   newCountMax.push_back(countMax[i] -> right);
+                }
+            }
+
+            if (newMaxSum > maxSum) {
+                maxSum = newMaxSum;
+                maxLevel = level;
+            }
+            countMax = newCountMax;
+        }
+        
+        return maxLevel;
+        
+        
+    }
+};

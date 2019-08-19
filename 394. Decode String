@@ -4,7 +4,8 @@ public:
     string decodeString(string s) {
         vector <int> numStack;
         vector <string> stringStack;
-        stringStack.resize(s.length());
+        stringStack.push_back("");
+        //stringStack.resize(s.length());
         bool isNumber = false;
         int currentNumber = 0;
         int currentLevel = 0;
@@ -23,6 +24,7 @@ public:
             else if (s[i] == '[') {
                 isNumber = false;
                 numStack.push_back(currentNumber);
+                stringStack.push_back("");
                 currentNumber = 0;
                 currentLevel ++;
             }

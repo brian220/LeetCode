@@ -1,0 +1,92 @@
+// Try to solve with suffix matrix (using prefix double algorithm (nlogn)), but TLE, try to find a O(n) way.
+class PrefixDouble {
+public:
+    int pos;
+    int currentRank;
+    int nextRank;
+};
+
+
+class Solution {
+public:
+    static bool cmpRank(PrefixDouble a, PrefixDouble b) 
+    { 
+        if (a.currentRank == b.currentRank) {
+            return a.nextRank < b.nextRank;
+        }
+        else {
+            return a.currentRank < b.currentRank;
+        }
+    } 
+    
+    static bool cmpPos(PrefixDouble a, PrefixDouble b) 
+    { 
+        return a.pos < b.pos;
+    } 
+    
+    string lastSubstring(string s) {
+        string returnString;
+        vector <PrefixDouble> pdV;
+        vector <PrefixDouble> tmpPdV;
+        vector <char> charOrder;
+        if (s == "") {
+            return "";
+        }
+        
+        for (int i = 0; i < s.length(); i ++) {
+            PrefixDouble pd;
+            pd.pos = i;
+            pd.currentRank = s[i] - 'a';
+            pdV.push_back(pd);
+        }
+        
+        for (int k = 1; k < 2 * s.length(); k *= 2) {
+            tmpPdV.resize(pdV.size());
+            for (int i = 0; i < pdV.size(); i ++) {
+                tmpPdV[pdV[i].pos] = pdV[i];
+            }
+            
+            pdV = tmpPdV;
+            
+            for (int i = 0; i < pdV.size(); i ++) {
+                int currentPos = pdV[i].pos;
+                if (currentPos + k < s.length()) {
+                    if (k == 1) {
+                       pdV[i].nextRank = s[currentPos + k] - 'a';
+                    }
+                    else {
+                       pdV[i].nextRank = pdV[currentPos + k].currentRank; 
+                    }
+                }
+                else {
+                    pdV[i].nextRank = -1;
+                }
+            }
+            
+            sort(pdV.begin(), pdV.end(), cmpRank);
+         
+            int prevCurrentRank = pdV[0].currentRank;
+            int prevNextRank = pdV[0].nextRank;
+            pdV[0].currentRank = 0;
+            
+            for (int i = 1; i < pdV.size(); i ++) {
+                int tmpCurrentRank = pdV[i].currentRank;
+                if (pdV[i].currentRank > prevCurrentRank) {
+                    
+                    pdV[i].currentRank = pdV[i - 1].currentRank + 1;
+                }
+                else if (pdV[i].nextRank > prevNextRank) {
+                    pdV[i].currentRank = pdV[i - 1].currentRank + 1;
+                }
+                else {
+                    pdV[i].currentRank =  pdV[i - 1].currentRank;
+                }
+                prevCurrentRank = tmpCurrentRank;
+                prevNextRank =  pdV[i].nextRank;
+            }
+        }
+        
+        returnString = s.substr(pdV[pdV.size() - 1].pos);
+        return returnString; 
+    }
+};

@@ -1,4 +1,4 @@
-// Try to solve with suffix matrix (using prefix double algorithm (nlogn)), but TLE, try to find a O(n) way.
+// Try to solve with suffix matrix (using prefix double algorithm (n(logn)^2)), but TLE, try to find a O(n) way.
 class PrefixDouble {
 public:
     int pos;

@@ -1,0 +1,74 @@
+class Solution {
+public:
+    vector<string> invalidTransactions(vector<string>& transactions) {
+        vector <vector <string>> dataSet(transactions.size());
+        vector <string> output;
+        for (int i = 0; i < transactions.size(); i ++) {
+            vector<string> datas;
+            string data = "";
+            for (int j = 0; j < transactions[i].length(); j ++) {
+                if (transactions[i][j] == ',') {
+                    datas.push_back(data);
+                    data = "";
+                }
+                else if (transactions[i][j] >= '0' && transactions[i][j] <= '9') {
+                    data += transactions[i][j];
+                }
+                else if (transactions[i][j] >= 'a' && transactions[i][j] <= 'z') {
+                    data += transactions[i][j];
+                }
+                if (j == transactions[i].length() - 1) {
+                    datas.push_back(data);
+                    data = "";
+                }
+            }
+            datas.push_back("false");
+            dataSet[i] = datas;
+        }
+        
+        
+        int size = dataSet.size();
+        for (int i = 0; i < size; i ++) {
+            int amount = 0;
+            for (int k = 0; k < dataSet[i][2].length(); k ++) {
+                            amount *= 10;
+                            amount += dataSet[i][2][k] - '0';
+            }
+            
+            if (amount > 1000) {
+                if (dataSet[i][4] == "false") {
+                    output.push_back(transactions[i]);
+                    dataSet[i][4] = "true";
+                }
+            }
+            
+            for (int j = i + 1; j < size; j ++) {
+                    if (dataSet[i][0] == dataSet[j][0] && dataSet[i][3] != dataSet[j][3]) {
+                        int timeI = 0;
+                        for (int k = 0; k < dataSet[i][1].length(); k ++) {
+                        timeI *= 10;
+                        timeI += dataSet[i][1][k] - '0';
+                        }
+                        
+                        int timeJ = 0;
+                        for (int k = 0; k < dataSet[j][1].length(); k ++) {
+                            timeJ *= 10;
+                            timeJ += dataSet[j][1][k] - '0';
+                        }
+                        if (abs(timeI - timeJ) <= 60) {
+                            if (dataSet[i][4] == "false") {
+                                output.push_back(transactions[i]);
+                                dataSet[i][4] = "true";
+                            }
+                            if (dataSet[j][4] == "false") {
+                                output.push_back(transactions[j]);
+                                dataSet[j][4] = "true";
+                            }
+                       }
+                  }
+              }   
+          }
+        
+        return output;
+    }
+};

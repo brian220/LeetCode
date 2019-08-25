@@ -1,0 +1,42 @@
+class Solution {
+public:
+    vector<int> numSmallerByFrequency(vector<string>& queries, vector<string>& words) {
+        vector<int> qNumbers;
+        vector<int> wNumbers;
+        vector<int> answer(queries.size(), 0);
+        vector<int> addBiggerNumbers(12, 0);
+        for (int i = 0; i < words.size(); i ++) {
+            int number = f(words[i]);
+            addBiggerNumbers[number] ++;
+        }
+        
+        for (int i = 9; i >= 0; i --) {
+            addBiggerNumbers[i] = addBiggerNumbers[i] + addBiggerNumbers[i + 1];
+        } 
+        
+      
+        
+        for (int i = 0; i < queries.size(); i ++) {
+            int number = f(queries[i]);
+            answer[i] = addBiggerNumbers[number + 1];
+        }
+        
+        return answer;
+    }
+    
+    int f(string s) {
+        int number = 0;
+        int smallest[26] = {};
+        for (int i = 0; i < s.length(); i ++) {
+            smallest[s[i] - 'a'] ++;
+        }
+        
+        for (int i = 0; i < 26; i ++) {
+            if (smallest[i] != 0) {
+                number = smallest[i];
+                break;
+            }
+        }
+        return number;
+    }
+};

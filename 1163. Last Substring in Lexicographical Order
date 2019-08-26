@@ -1,4 +1,4 @@
-// Try to solve with suffix matrix (using prefix double algorithm (n(logn)^2)), but TLE, try to find a O(n) way.
+// Try using radix sort still TLE
 class PrefixDouble {
 public:
     int pos;
@@ -17,11 +17,6 @@ public:
         else {
             return a.currentRank < b.currentRank;
         }
-    } 
-    
-    static bool cmpPos(PrefixDouble a, PrefixDouble b) 
-    { 
-        return a.pos < b.pos;
     } 
     
     string lastSubstring(string s) {
@@ -63,7 +58,7 @@ public:
                 }
             }
             
-            sort(pdV.begin(), pdV.end(), cmpRank);
+            radixSort(pdV);
          
             int prevCurrentRank = pdV[0].currentRank;
             int prevNextRank = pdV[0].nextRank;
@@ -89,4 +84,45 @@ public:
         returnString = s.substr(pdV[pdV.size() - 1].pos);
         return returnString; 
     }
+    
+    void radixSort(vector <PrefixDouble> & pdV) {
+        vector <vector <PrefixDouble>> bucketNextRank;
+        vector <vector <PrefixDouble>> bucketCurrentRank;
+        int nextRankSize = 0;
+        for (int i = 0; i < pdV.size(); i ++) {
+            if (pdV[i].nextRank > nextRankSize) {
+                nextRankSize = pdV[i].nextRank;
+            }
+        }
+        bucketNextRank.resize(nextRankSize + 2);
+        
+        int currentRankSize = 0;
+        for (int i = 0; i < pdV.size(); i ++) {
+            if (pdV[i].currentRank > currentRankSize) {
+                currentRankSize = pdV[i].currentRank;
+            }
+        }
+        bucketCurrentRank.resize(currentRankSize + 2);
+        
+        for (int i = 0; i < pdV.size(); i ++) {
+            bucketNextRank[pdV[i].nextRank + 1].push_back(pdV[i]);
+        }
+        
+        for (int i = 0; i < bucketNextRank.size(); i ++) {
+            for (int j = 0; j < bucketNextRank[i].size(); j ++) {
+            bucketCurrentRank[bucketNextRank[i][j].currentRank + 1].push_back(bucketNextRank[i][j]);
+            }
+        }
+        
+        pdV.clear();
+        for (int i = 0; i < bucketCurrentRank.size(); i ++) {
+            for (int j = 0; j < bucketCurrentRank[i].size(); j ++) {
+                pdV.push_back( bucketCurrentRank[i][j]);
+            }
+        }
+        
+        return;
+    }
+    
 };
+

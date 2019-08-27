@@ -9,62 +9,33 @@
 class Solution {
 public:
     ListNode* removeZeroSumSublists(ListNode* head) {
-        vector <int> array;
-        ListNode* currentNode = head;
-
+        unordered_map<int, ListNode*> leftSumMap;
+        unordered_map<int, ListNode*>::iterator iter;
+        int leftSum = 0;
+        ListNode* root = new ListNode(0);
+        root -> next = head;
+        ListNode* currentNode = root;
         while (currentNode != NULL) {
-            array.push_back(currentNode -> val);
+            leftSum += currentNode -> val;
+            iter = leftSumMap.find(leftSum);
+            if (iter != leftSumMap.end()) {
+                ListNode* prev = leftSumMap[leftSum];
+                ListNode* start = prev;
+                int tmpLeftSum = leftSum;
+                while (start != currentNode) {
+                    start = start -> next;
+                    tmpLeftSum += start -> val;
+                    if (start != currentNode) leftSumMap.erase(tmpLeftSum);
+                }
+                prev -> next = currentNode -> next;
+            }
+            else {
+                leftSumMap[leftSum] = currentNode;
+            }
+            
             currentNode = currentNode -> next;
         }
         
-        
-        vector <int> leftSumArray;
-        int leftSum = 0;
-        for (int i = 0; i < array.size(); i ++) {
-            leftSumArray.push_back(leftSum);
-            leftSum += array[i];
-        }
-        leftSumArray.push_back(leftSum);
-        
-        bool zeroArrayExist = true;
-        
-        while (zeroArrayExist) {
-            unordered_map<int, int> leftSumMap;
-            unordered_map<int, int>::iterator iter;
-            int left = 0;
-            int right = 0;
-            zeroArrayExist = false;
-            for (int i = 0; i < leftSumArray.size(); i ++) {
-                iter = leftSumMap.find(leftSumArray[i]);
-                
-                
-                if(iter != leftSumMap.end()) {
-                    left = iter -> second;
-                    right = i;
-                    zeroArrayExist = true;
-                    break;
-                }
-                else {
-                    leftSumMap.insert(pair<int, int> (leftSumArray[i], i));
-                }
-                
-            }
-            array.erase(array.begin() + left, array.begin() + right);
-            leftSumArray.erase(leftSumArray.begin() + left, leftSumArray.begin() + right);
-        }
-        
-        if (array.size() == 0) {
-             return NULL;
-        }
-        
-        ListNode* answer = new ListNode(array[0]);
-        ListNode* node = answer;
-        for (int i = 1; i < array.size(); i ++) {
-             ListNode* newNode = new ListNode(array[i]);
-             node -> next = newNode;
-             node = newNode;
-        }
-        node -> next = NULL;
-        return answer;
+        return root -> next;
     }
 };

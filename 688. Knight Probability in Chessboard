@@ -1,0 +1,59 @@
+// Solved by dynamic programming
+class Solution {
+public:
+    double knightProbability(int N, int K, int r, int c) {
+        double totalWays = 1;
+        vector <vector<double>> dp(N,vector<double>(N, 0));
+        dp[r][c] = 1;
+        for (int step = 0; step < K; step ++) {
+            totalWays *= 8;
+            vector <vector<double>> nextDp(N, vector<double>(N, 0));
+            for (int i = 0; i < N; i ++) {
+                for (int j = 0; j < N; j ++) {
+                    if (i - 1 >= 0 && j - 2 >= 0) {
+                        nextDp[i][j] += dp[i - 1][j - 2];
+                    }
+                    
+                    if (i - 2 >= 0 && j - 1 >= 0) {
+                        nextDp[i][j] += dp[i - 2][j - 1];
+                    }
+                    
+                    if (i - 2 >= 0 && j + 1 < N) {
+                        nextDp[i][j] += dp[i - 2][j + 1];
+                    }
+                    
+                    if (i - 1 >= 0 && j + 2 < N) {
+                        nextDp[i][j] += dp[i - 1][j + 2];
+                    }
+                    
+                    if (i + 1 < N && j + 2 < N) {
+                        nextDp[i][j] += dp[i + 1][j + 2];
+                    }
+                    
+                    if (i + 2 < N && j + 1 < N) {
+                        nextDp[i][j] += dp[i + 2][j + 1];
+                    }
+                    
+                    if (i + 2 < N && j - 1 >= 0) {
+                        nextDp[i][j] += dp[i + 2][j - 1];
+                    }
+                    
+                    if (i + 1 < N && j - 2 >= 0) {
+                        nextDp[i][j] += dp[i + 1][j - 2];
+                    }
+                }
+            }
+            dp = nextDp;
+        }
+        
+        double ways = 0;
+        for (int i = 0; i < N; i ++) {
+            for (int j = 0; j < N; j ++) {
+                ways += dp[i][j];
+            }
+        }
+        
+       
+        return ways/totalWays;
+    }
+};

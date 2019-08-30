@@ -1,0 +1,72 @@
+//Solved by using back tracking recursive
+class Solution {
+public:
+    vector<vector<string>> solution;
+    vector<string> queens;
+    string nextRow;
+    
+    vector<vector<string>> solveNQueens(int n) {
+       
+        for (int i = 0; i < n; i ++) {
+            nextRow += 'x';
+        }
+        backtracking(n);
+        return solution;
+    }
+    
+    void backtracking(int n) {
+        string currentRow = nextRow;
+        if (queens.size() == n) {
+            solution.push_back(queens);
+            return;
+        }
+        
+        for (int i = 0; i < n; i ++) {
+            if (currentRow[i] == 'x') {
+                currentRow[i] = 'Q';
+                
+                string queen = "";
+                for (int j = 0; j < n; j ++) {
+                    if (currentRow[j] == 'Q') {
+                        queen+= 'Q';
+                    }
+                    else {
+                        queen += '.';
+                    }
+                }
+                
+                queens.push_back(queen);
+                buildNextRow(n);
+                
+                backtracking(n);
+                
+                queens.pop_back();
+                currentRow[i] = 'x';
+            }
+        }
+    }
+    
+    void buildNextRow(int n) {
+        nextRow = "";
+        for (int i = 0; i < n; i ++) {
+            nextRow += 'x';
+        }
+        
+        int rowNum = queens.size();
+        for (int i = 0; i < queens.size(); i ++) {
+            for (int j = 0; j < n; j ++) {
+                if (queens[i][j] == 'Q') {
+                    nextRow[j] = '.';
+                    if (j + (rowNum - i) < n) {
+                        nextRow[j + (rowNum - i)] = '.';
+                    } 
+                    
+                    if (j - (rowNum - i) >= 0) {
+                        nextRow[j - (rowNum - i)] = '.';
+                    } 
+                    break;
+                } 
+            }
+        }
+    }
+};

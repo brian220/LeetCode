@@ -1,0 +1,55 @@
+//Solved by dynamic programming
+class Solution {
+public:
+    int findPaths(int m, int n, int N, int i, int j) {
+        if (m == 0 || n == 0)
+            return 0;
+        vector <vector<int>> dp (m, vector<int>(n, 0));
+        dp[i][j] = 1;
+        int count = 0;
+        int M = 1000000007;
+        for (int step = 0; step < N; step ++ ) {
+            vector <vector<int>> nextDp (m, vector<int>(n, 0));
+            for (int row = 0; row < m; row ++) {
+                for (int col = 0; col < n; col ++) {
+                 
+                    if (row == 0) {
+                        count = (count + dp[row][col]) % M;
+                    }
+                    
+                    if (row == m - 1) {
+                        count = (count + dp[row][col]) % M;
+                    }
+                    
+                    if (col == 0) {
+                        count = (count + dp[row][col]) % M;
+                    }
+                    
+                    if (col == n - 1) {
+                        count = (count + dp[row][col]) % M;
+                    }
+                    
+                    if (row - 1 >= 0) {
+                        nextDp[row][col] = (nextDp[row][col] + dp[row - 1][col]) % M;
+                    }
+                    
+                    if (row + 1 < m) {
+                        nextDp[row][col] = (nextDp[row][col] + dp[row + 1][col]) % M;
+                    }
+                    
+                    if (col - 1 >= 0) {
+                        nextDp[row][col] = (nextDp[row][col] + dp[row][col - 1]) % M;  
+                    }
+                    
+                    if (col + 1 < n) {
+                        nextDp[row][col] = (nextDp[row][col] + dp[row][col + 1]) % M;
+                    }
+                    
+                    nextDp[row][col] =  nextDp[row][col] % M;
+                }
+            }
+            dp = nextDp;
+        }
+        return count;
+    }
+};

@@ -1,32 +1,21 @@
-//Slow but accepted solution.
+// Change the mapping way 
+// hot -> h*t , *ot, ho* , add "hot" to mMap[h*t], 
+// hit -> h*t , *it, hi* , add "hit" to mMap[h*t], 
+// save the time to find adjacent words.
+
 class Solution {
 public:
     int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
-        bool haveEndWord = false;
-        
-        for (int i = 0; i < wordList.size(); i ++) {
-            if (wordList[i] == endWord) {
-                haveEndWord = true;
-            }
-        }
-        
-        if (!haveEndWord) {
-            return 0;
-        }
-        
-        if(wordList.size() == 1 && stringDiff(beginWord, wordList[0]) == 0) {
-            return 2;
-        }
-        
+       
         wordList.push_back(beginWord);
         int listSize = wordList.size();
-        vector <vector<int>> wordConnect(listSize, vector<int>(0, 0));
-        for (int i = 0; i < listSize - 1; i ++) {
-            for (int j = i + 1; j < listSize; j ++) {
-                if (stringDiff(wordList[i], wordList[j]) == 1) {
-                   wordConnect[i].push_back(j);
-                   wordConnect[j].push_back(i);
-                }
+        map<string, vector<int>> mMap;
+        int length = wordList[0].size();
+        for (int i = 0; i < listSize; i ++) {
+            for (int j = 0; j < length; j ++) {
+                string temp = wordList[i];
+                temp[j] = '*';
+                mMap[temp].push_back(i);
             }
         }
         
@@ -36,44 +25,31 @@ public:
         deque <int>  ladder;
         ladder.push_back(wordList.size() - 1);
         int step = 0;
-        bool foundLadder = false;
         
         for (step = 2; step < wordList.size() + 2; step ++) {
             int size = ladder.size();
             for (int i = 0; i < size; i ++) {
                 int stringIndex = ladder.front();
                 ladder.pop_front();
-                for (int j = 0 ; j < wordConnect[stringIndex].size(); j ++) {
-                    int currIndex = wordConnect[stringIndex][j];
-                    if (wordUsed[currIndex] == false) {
-                        if (wordList[currIndex] == endWord) {
-                            foundLadder = true;
-                            break;
+                string currentString = wordList[stringIndex];
+                for (int j = 0; j < currentString.size(); j ++) {
+                    string temp = currentString;
+                    temp[j] = '*';
+                    for (int k = 0; k < mMap[temp].size(); k ++) {
+                        int curIndex = mMap[temp][k];
+                        if (wordUsed[curIndex] == false) {
+                            if (wordList[curIndex] == endWord) {
+                                return step;
+                            }
+                            ladder.push_back(curIndex);
+                            wordUsed[curIndex] = true;
                         }
-                        ladder.push_back(currIndex);
-                        wordUsed[currIndex] = true;
                     }
                 }
-                if (foundLadder)break;
             }
-            if (foundLadder)break;
-        }
-    
-        if (foundLadder) {
-            return step;
         }
         
         return 0;
-    }
-    
-    int stringDiff(string a, string b) {
-        int count = 0;
-        for (int i = 0; i < a.length(); i ++) {
-            if (a[i] != b[i]) {
-                count ++;
-            }
-        }
-        return count;
     }
     
 };

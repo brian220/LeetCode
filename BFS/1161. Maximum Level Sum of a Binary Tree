@@ -11,40 +11,33 @@
 class Solution {
 public:
     int maxLevelSum(TreeNode* root) {
-        if (root == NULL) {
-            return 0; 
-        }
-        int level = 1;
-        int maxLevel = 1;
-        int maxSum = root -> val;
-        TreeNode* currentNode = root;
-        vector <TreeNode*> countMax;
-        countMax.push_back(root);
-     
-        while (countMax.size() != 0) {
+        deque <TreeNode* > q;
+        q.push_back(root);
+        int level = 0;
+        int maxLevel = 0;
+        int sum = 0;
+        int maxSum = 0;
+        while (q.size() != 0) {
+            sum = 0;
             level ++;
-            vector <TreeNode*> newCountMax;
-            int newMaxSum = 0;
-            for(int i = 0; i < countMax.size(); i ++) {
-                if (countMax[i] -> left != NULL) {
-                   newMaxSum += countMax[i] -> left -> val;
-                   newCountMax.push_back(countMax[i] -> left);
+            int size = q.size();
+            for (int i = 0; i < size; i ++) {
+                TreeNode* currentNode = q.front();
+                q.pop_front();
+                sum += currentNode -> val;
+                if (currentNode -> left != NULL) {
+                    q.push_back(currentNode -> left);
                 }
-                if (countMax[i] -> right != NULL) {
-                   newMaxSum += countMax[i] -> right -> val; 
-                   newCountMax.push_back(countMax[i] -> right);
+                if (currentNode -> right != NULL) {
+                    q.push_back(currentNode -> right);
                 }
             }
-
-            if (newMaxSum > maxSum) {
-                maxSum = newMaxSum;
+            
+            if (sum > maxSum) {
                 maxLevel = level;
+                maxSum = sum;
             }
-            countMax = newCountMax;
         }
-        
         return maxLevel;
-        
-        
     }
 };

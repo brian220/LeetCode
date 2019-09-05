@@ -1,0 +1,79 @@
+//Slow but accepted solution.
+class Solution {
+public:
+    int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
+        bool haveEndWord = false;
+        
+        for (int i = 0; i < wordList.size(); i ++) {
+            if (wordList[i] == endWord) {
+                haveEndWord = true;
+            }
+        }
+        
+        if (!haveEndWord) {
+            return 0;
+        }
+        
+        if(wordList.size() == 1 && stringDiff(beginWord, wordList[0]) == 0) {
+            return 2;
+        }
+        
+        wordList.push_back(beginWord);
+        int listSize = wordList.size();
+        vector <vector<int>> wordConnect(listSize, vector<int>(0, 0));
+        for (int i = 0; i < listSize - 1; i ++) {
+            for (int j = i + 1; j < listSize; j ++) {
+                if (stringDiff(wordList[i], wordList[j]) == 1) {
+                   wordConnect[i].push_back(j);
+                   wordConnect[j].push_back(i);
+                }
+            }
+        }
+        
+        vector <bool> wordUsed(listSize, false);
+        wordUsed[listSize - 1] = true;
+        
+        deque <int>  ladder;
+        ladder.push_back(wordList.size() - 1);
+        int step = 0;
+        bool foundLadder = false;
+        
+        for (step = 2; step < wordList.size() + 2; step ++) {
+            int size = ladder.size();
+            for (int i = 0; i < size; i ++) {
+                int stringIndex = ladder.front();
+                ladder.pop_front();
+                for (int j = 0 ; j < wordConnect[stringIndex].size(); j ++) {
+                    int currIndex = wordConnect[stringIndex][j];
+                    if (wordUsed[currIndex] == false) {
+                        if (wordList[currIndex] == endWord) {
+                            foundLadder = true;
+                            break;
+                        }
+                        ladder.push_back(currIndex);
+                        wordUsed[currIndex] = true;
+                    }
+                }
+                if (foundLadder)break;
+            }
+            if (foundLadder)break;
+        }
+    
+        if (foundLadder) {
+            return step;
+        }
+        
+        return 0;
+    }
+    
+    int stringDiff(string a, string b) {
+        int count = 0;
+        for (int i = 0; i < a.length(); i ++) {
+            if (a[i] != b[i]) {
+                count ++;
+            }
+        }
+        return count;
+    }
+    
+};

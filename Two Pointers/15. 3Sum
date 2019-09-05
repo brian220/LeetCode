@@ -1,0 +1,46 @@
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        vector<vector<int>> sum;
+        if (nums.empty()) {
+            return sum;
+        }
+        sort(nums.begin(), nums.end());
+        int prevNum = nums[0] - 1;
+        while(nums.size() >= 3) {
+            int n = nums.back();
+            nums.pop_back();
+            if (n != prevNum) {
+                int d = 0 - n;
+                twoSum(sum, nums, n ,d);
+                prevNum = n;
+            }
+        }
+    
+        return sum;
+    }
+    
+    void twoSum(vector<vector<int>>& sum, vector<int> nums, int n, int d) {
+        int leftPoint = 0;
+        int rightPoint = nums.size() - 1;
+        int prevLeft = nums[0] - 1;
+      
+        while (rightPoint - leftPoint > 0) {
+           
+            int currentSum = nums[leftPoint] + nums[rightPoint];
+            if ( currentSum < d) {
+                leftPoint ++;
+            }
+            if ( currentSum > d) {
+                rightPoint --;
+            }
+            if (currentSum == d) {
+                if (nums[leftPoint] != prevLeft) {
+                    sum.push_back({n, nums[leftPoint], nums[rightPoint]});
+                    prevLeft = nums[leftPoint];
+                }
+                leftPoint ++;
+            }
+        }
+    } 
+};

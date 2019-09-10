@@ -1,0 +1,162 @@
+// HARD pass 16/18 cases, failed because of memory usage
+class DinnerPlates {
+public: 
+    vector <vector<int>> stacks;
+    vector <int> leftHeap;
+    vector <int> rightHeap;
+    int stackCapacity;
+    
+       
+    DinnerPlates(int capacity) {
+        stackCapacity = capacity;
+        leftHeap.resize(2);
+        leftHeap[1] = 0;
+        rightHeap.resize(1);
+        stacks.push_back({});
+    }
+    
+    void push(int val) {
+        int currentIndex = leftHeap[1];
+        stacks[currentIndex].push_back(val);
+        if (stacks[currentIndex].size() == stackCapacity) {
+            swap(leftHeap[1], leftHeap[leftHeap.size() - 1]);
+            leftHeap.pop_back();
+            if (leftHeap.size() == 1) {
+                leftHeap.push_back(currentIndex + 1);
+                stacks.push_back({});
+            }
+            else {
+                deleteHeapify(leftHeap, "min", 1); 
+            }
+        }
+        
+        if (stacks[currentIndex].size() == 1 ) {
+            rightHeap.push_back(currentIndex);
+            insertHeapify(rightHeap, "max");
+        }
+    }
+    
+    int pop() {
+        if (stacks.empty()) {
+            return -1;
+        }
+        int currentIndex = rightHeap[1];
+        return popAtStack(currentIndex);
+    }
+    
+    int popAtStack(int index) {
+        if (index > stacks.size() || stacks[index].empty()) {
+            return -1;
+        }
+        int popValue = stacks[index].back();
+        stacks[index].pop_back();
+        if (stacks[index].size() == stackCapacity - 1) {
+            leftHeap.push_back(index);
+            insertHeapify(leftHeap, "min");
+        }
+        
+        if (stacks[index].size() == 0) {
+           // printRightHeap();
+            int zeroIndex = searchRightHeap(rightHeap, index);
+            swap(rightHeap[zeroIndex], rightHeap[rightHeap.size() - 1]);
+            //printRightHeap();
+            rightHeap.pop_back();
+            deleteHeapify(rightHeap, "max", zeroIndex);
+           
+        }
+        return popValue;
+    }
+    
+    void deleteHeapify(vector <int>& heap, string heapKind, int i) {
+        while (i <= (heap.size() - 1)/2 ) {
+            if (heapKind == "max") {
+                int maxIndex = i;
+                if (2 * i < heap.size() && heap[2 * i] > heap[maxIndex]) {
+                    maxIndex = 2 * i;
+                }
+                if ((2 * i + 1) < heap.size() && heap[2 * i + 1] > heap[maxIndex]) {
+                    maxIndex = 2 * i + 1;
+                }
+                if (i == maxIndex) {
+                    break;
+                }
+                swap(heap[i], heap[maxIndex]);
+                i = maxIndex;
+            }
+            else if (heapKind == "min") {
+                int minIndex = i;
+                if (2 * i < heap.size() && heap[2 * i] < heap[minIndex]) {
+                    minIndex = 2 * i;
+                }
+                if ((2 * i + 1) < heap.size() && heap[2 * i + 1] < heap[minIndex]) {
+                    minIndex = 2 * i + 1;
+                }
+                if (i == minIndex) {
+                    break;
+                }
+                swap(heap[i], heap[minIndex]);
+                i = minIndex;
+            }
+         }
+    }
+    
+    void insertHeapify(vector <int>& heap, string heapKind) {
+        int i = heap.size() - 1;
+        while (i > 1) {
+            if (heapKind == "max") {
+               if (heap[i] > heap[i/2]) {
+                   swap(heap[i], heap[i/2]);
+                   i /= 2;
+               }
+               else {
+                   break;
+               }
+            }
+            else if (heapKind == "min") {
+                if(heap[i] < heap[i/2]) {
+                    swap(heap[i], heap[i/2]);
+                    i /= 2;
+                }
+                else {
+                    break;
+                }
+            }
+        }
+    }
+    
+    int searchRightHeap(vector<int> heap, int index) {
+        for (int i = 1; i < heap.size(); i ++) {
+            if (heap[i] == index) {
+                return i;
+            }
+        }
+        return 1;
+    }
+    
+    void printStacks() {
+        for (int i = 0; i < stacks.size(); i ++) {
+            for (int j = 0; j < stacks[i].size(); j ++) {
+                cout << stacks[i][j] << " ";
+            }
+            cout << endl;
+        }
+    }
+    
+    void printRightHeap() {
+        for (int i = 0; i < rightHeap.size(); i ++) {
+            cout << rightHeap[i] << " ";
+        }
+        cout << endl;
+    }
+  
+};
+
+
+
+/**
+ * Your DinnerPlates object will be instantiated and called as such:
+ * DinnerPlates* obj = new DinnerPlates(capacity);
+ * obj->push(val);
+ * int param_2 = obj->pop();
+ * int param_3 = obj->popAtStack(index);
+ */

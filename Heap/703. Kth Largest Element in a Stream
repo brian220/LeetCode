@@ -1,0 +1,48 @@
+class KthLargest {
+public:
+    int kth;
+    vector <int> heap;
+    KthLargest(int k, vector<int>& nums) {
+        kth = k;
+        if (nums.size() > k) {
+            heap.assign(nums.begin(), nums.begin() + k);
+            make_heap(heap.begin(), heap.end(), greater<int>()); // greater<int>() for the min heap
+            for (int i = kth; i < nums.size(); i ++) {
+                if (nums[i] >= heap.front()) {
+                    pop_heap(heap.begin(), heap.end(), greater<int>()); 
+                    heap.pop_back();
+                    heap.push_back(nums[i]);
+                    push_heap(heap.begin(), heap.end(), greater<int>());
+                }
+            }
+        }
+        else {
+             heap.assign(nums.begin(), nums.end());
+             make_heap(heap.begin(), heap.end(), greater<int>()); // greater<int>() for the min heap
+        }
+    }
+    
+    int add(int val) {
+        if (heap.size() < kth) {
+            heap.push_back(val);
+            push_heap(heap.begin(), heap.end(), greater<int>());
+            return heap.front();
+        }
+        
+        if (val > heap.front()) {
+             pop_heap(heap.begin(), heap.end(), greater<int>()); 
+             heap.pop_back();
+
+             heap.push_back(val);
+             push_heap(heap.begin(), heap.end(), greater<int>());
+        }
+       
+        return heap.front();
+    }
+};
+
+/**
+ * Your KthLargest object will be instantiated and called as such:
+ * KthLargest* obj = new KthLargest(k, nums);
+ * int param_1 = obj->add(val);
+ */

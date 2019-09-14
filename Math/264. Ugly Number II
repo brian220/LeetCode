@@ -1,0 +1,55 @@
+class uglyNumSet {
+public:
+    long long int baseNum;
+    long long int num[3];
+    int currentIndex;
+    uglyNumSet(long long int base) {
+        currentIndex = 0;
+        baseNum = base;
+        num[0] = base * 2;
+        num[1] = base * 3;
+        num[2] = base * 5;
+    }
+};
+
+class Solution {
+public:
+    int nthUglyNumber(int n) {
+        if (n <= 5) {
+            return n;
+        }
+        int startCheck = 0;
+        vector <long long int> minNumber;
+        minNumber.push_back(2);
+        vector <uglyNumSet> uglyNum;
+        uglyNum.push_back(uglyNumSet(1));
+        
+        while (uglyNum.size() < n) {
+            long long int min = minNumber[startCheck];
+            for (int i = startCheck; i < minNumber.size(); i ++) {
+                if (minNumber[i] < min) {
+                    min = minNumber[i];
+                }
+            }
+            
+            for (int i = startCheck; i < minNumber.size(); i ++) {
+                if (minNumber[i] == min) {
+                    if (uglyNum[i].currentIndex < 2) {
+                        uglyNum[i].currentIndex ++;
+                        minNumber[i] = uglyNum[i].num[uglyNum[i].currentIndex];
+                    }
+                    else {
+                        startCheck++;
+                    }
+                }
+            }
+            
+            uglyNum.push_back(uglyNumSet(min));
+            minNumber.push_back(min * 2);
+            
+        }
+        
+        return uglyNum[uglyNum.size() - 1].baseNum;
+        
+    }
+};

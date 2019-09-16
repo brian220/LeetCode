@@ -1,0 +1,30 @@
+// Solved by quick sort, in C++ it can be solved by piority queue(heap), too.
+class Solution {
+public:
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        if (k == nums.size()) {
+            return nums;
+        }
+        unordered_map <int, int> freqElement;
+        for (int i = 0; i < nums.size(); i ++) {
+            if (freqElement[nums[i]]) {
+                freqElement[nums[i]] ++;
+            }
+            else {
+                freqElement[nums[i]] = 1;
+            }
+        }
+        
+        vector <pair <int, int>> mapVector (freqElement.begin(), freqElement.end());
+        sort(mapVector.begin(), mapVector.end(), compare);
+        vector <int> re;
+        for(int i = 0; i < k; i ++) {
+            re.push_back(mapVector[i].first);
+        }
+        return re;
+    }
+    
+    static bool compare(pair <int, int> a, pair <int, int> b) {
+        return a.second > b.second;
+    }
+};

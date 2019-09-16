@@ -1,0 +1,32 @@
+class Solution {
+public:
+    int findKthLargest(vector<int>& nums, int k) {
+        vector <int> heap;
+        heap.assign(nums.begin(), nums.begin() + k);
+        make_heap(heap.begin(), heap.end(), greater<int>());
+        for (int i = k; i < nums.size(); i ++) {
+            if (nums[i] > heap.front()) {
+                pop_heap(heap.begin(), heap.end(), greater<int>());
+                heap.pop_back();
+                heap.push_back(nums[i]);
+                push_heap(heap.begin(), heap.end(), greater<int>());
+            }
+        }
+        
+        return heap.front();
+    }
+};
+
+// Can also be don by quick sort, in compare with heap, quick sort would be better in the ordered data but lose in the worse case. 
+/*
+
+class Solution {
+public:
+    int findKthLargest(vector<int>& nums, int k) {
+      sort(nums.begin(), nums.end(), greater<int>());
+       return nums[k - 1];
+
+    }
+}; 
+
+*/

@@ -1,0 +1,45 @@
+// think of connected componnent
+class Solution {
+public:
+    string smallestStringWithSwaps(string s, vector<vector<int>>& pairs) {
+        vector <vector<int>> neighbor(s.length());
+        for (int i = 0; i < pairs.size(); i ++) {
+            neighbor[pairs[i][0]].push_back(pairs[i][1]);
+            neighbor[pairs[i][1]].push_back(pairs[i][0]);
+        }
+        
+        vector <bool> visit(s.length(), false);
+        for (int i = 0; i < s.length(); i ++) {
+            vector <int> connect;
+            deque <int> bfs;
+            if (!visit[i]) {
+                bfs.push_back(i);
+                while (!bfs.empty()) {
+                    int currentNode = bfs.front();
+                    bfs.pop_front();
+                    connect.push_back(currentNode);
+                    visit[currentNode] = true;
+                    for (int j = 0; j < neighbor[currentNode].size(); j ++) {
+                        if (!visit[neighbor[currentNode][j]]) { 
+                            visit[neighbor[currentNode][j]] = true;
+                            bfs.push_back(neighbor[currentNode][j]);
+                        }
+                    }
+               }
+            }
+            
+            sort(connect.begin(), connect.end());
+            string tmp;
+            for (int i = 0; i < connect.size(); i ++) {
+                tmp.push_back(s[connect[i]]);
+            }
+            
+            sort(tmp.begin(), tmp.end());
+            for (int i = 0; i < tmp.size(); i ++) {
+                s[connect[i]] = tmp[i];
+            }
+        }
+        
+        return s;
+    }
+};

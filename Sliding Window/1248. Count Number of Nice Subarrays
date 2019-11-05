@@ -1,0 +1,21 @@
+class Solution {
+public:
+    int numberOfSubarrays(vector<int>& nums, int k) {
+        return atMostK(nums, k) - atMostK(nums, k - 1);
+    }
+    
+    int atMostK(vector<int>& nums, int k) {
+        int numOdd = 0;
+        int numSub = 0;
+        int i = 0;
+        for (int j = 0; j < nums.size(); j ++) {
+            if (nums[j] % 2 == 1) numOdd ++;
+            while(numOdd > k) {
+                if(nums[i] % 2 == 1) numOdd --;
+                i ++;
+            }
+            numSub += j - i + 1;
+        }
+        return numSub;
+    }
+};

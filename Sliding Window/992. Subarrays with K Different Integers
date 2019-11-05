@@ -1,0 +1,27 @@
+class Solution {
+public:
+    int subarraysWithKDistinct(vector<int>& A, int K) {
+        return atMostK(A , K) - atMostK(A, K - 1);
+    }
+    
+    int atMostK(vector<int>& A, int K) {
+        int i = 0;
+        int numSub = 0;
+        int numDiff = 0;
+        unordered_map <int, int> hashTable;
+        for(int j = 0; j < A.size(); j ++) {
+            if (hashTable[A[j]] == 0) numDiff ++;
+            hashTable[A[j]] ++;
+            
+            // The different numbers more then K
+            while(numDiff > K) {
+                hashTable[A[i]] --;
+                if (hashTable[A[i]] == 0) numDiff --;
+                i ++;
+            }
+            
+            numSub += j - i + 1; 
+        }
+        return numSub;
+    }
+};

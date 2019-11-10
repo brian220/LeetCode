@@ -1,0 +1,36 @@
+class Solution {
+public:
+    vector<vector<int>> reconstructMatrix(int upper, int lower, vector<int>& colsum) {
+        vector<vector<int>> reMatrix;
+       
+        int total = 0;
+        for(int i = 0; i < colsum.size(); i ++ ) {
+            total += colsum[i];
+        }
+        
+        if (total != upper + lower) return reMatrix;
+        
+        reMatrix.resize(2);
+        for(int i = 0; i < colsum.size(); i ++ ) {
+            reMatrix[0].push_back(colsum[i]);
+            reMatrix[1].push_back(0);
+        }
+        
+        int lowerLack = lower;
+        int i = 0;
+        while(lowerLack > 0) {
+            if (reMatrix[0][i] > lowerLack) {
+                reMatrix[0][i] -= lowerLack;
+                reMatrix[1][i] += lowerLack;
+                lowerLack = 0;
+            } 
+            else {
+                lowerLack -= reMatrix[0][i];
+                reMatrix[1][i] += reMatrix[0][i];
+                reMatrix[0][i] = 0;
+            }
+            i ++;
+        }
+        return reMatrix;
+    }
+};

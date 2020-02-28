@@ -55,7 +55,8 @@ public:
  
  
  
- // Following is the recursion solution, in this question, recursion will be more 
+ // Following is the recursion solution, in this question, recursion will be 
+ // more intuitive than the stack solution
  
  /**
  * Definition for a binary tree node.

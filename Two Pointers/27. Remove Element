@@ -19,3 +19,29 @@ public:
         return cur;
     }
 };
+
+// Easy
+// Can be solved by double pointers (IMPROVED SOLUTION => 100% SPEED & MEMORY)
+class Solution {
+public:
+    void swap(int &a, int &b) {
+        int temp = a;
+        a = b;
+        b = temp;
+    }
+    
+    int removeElement(vector<int>& nums, int val) {
+        int n = nums.size();
+        int i = 0;
+        while (i < n) {
+            if (nums[i] == val) {
+                nums[i] = nums[n - 1];
+                n --;
+            }
+            else {
+                i ++;
+            }
+        }
+        return n;
+    }
+};

@@ -29,3 +29,33 @@ public:
         return result;
     }
 };
+
+
+
+// Improved the Speed
+// Because the 0 << nums[i] << 1
+// So can use the vector(array) to replace the hash table to achieve O(1) look up.
+class Solution {
+public:
+    static bool myfunction (int i,int j) { return (i<j); }
+    
+    vector<int> smallerNumbersThanCurrent(vector<int>& nums) {
+        vector<int> n(101, -1); // Use an array to replace STL::map
+        
+        vector<int> results;
+        vector<int> snums = nums;
+        sort(snums.begin(), snums.end(), myfunction);
+            
+        for(int i = 0; i < snums.size(); i ++) {
+            if(n[snums[i]] == -1) {
+                n[snums[i]] = i;
+            }
+        }
+        
+        for(int i = 0; i < nums.size(); i ++) {
+            results.push_back(n[nums[i]]);
+        }
+        
+        return results;
+    }
+};

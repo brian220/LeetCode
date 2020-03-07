@@ -1,0 +1,31 @@
+// Easy
+// Solution Use Hash Table(map in STL) + Sorting
+class Solution {
+public:
+    static bool myfunction (int i,int j) { return (i<j); }
+    vector<int> smallerNumbersThanCurrent(vector<int>& nums) {
+        vector<int> result;
+        
+        // Sort the nums first
+        vector<int> snums = nums;
+        sort (snums.begin(), snums.end(), myfunction);
+        
+        map<int, int> hash_num_smallerCount;
+        map<int, int>::iterator iter;
+        
+        for(int i = 0; i < snums.size(); i ++) {
+            iter = hash_num_smallerCount.find(snums[i]);
+            
+            // If not in the hash table
+            if(iter == hash_num_smallerCount.end()) {
+                hash_num_smallerCount[snums[i]] = i;
+            }
+        }
+        
+        for(int i = 0; i < nums.size(); i ++) {
+            result.push_back(hash_num_smallerCount[nums[i]]);
+        }
+        
+        return result;
+    }
+};
